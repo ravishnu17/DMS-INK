@@ -1,0 +1,141 @@
+import React, { Suspense, useContext } from 'react'
+import DataTable from 'react-data-table-component';
+import { formatDate, tableStyle } from '../../constant/Util';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { docsRoute, schoolRoutes } from '../../routes';
+import { ContextProvider } from '../../App';
+
+function SchoolView() {
+  const navigate = useNavigate();
+  const contextProp = useContext(ContextProvider);
+  const data = [
+    { id: 1, name: "Annual Audit Statement", type:"Annual", date: formatDate(new Date()) },
+    { id: 2, name: "Professional Tax Payment", type:"Annual", date: formatDate(new Date()) },
+    { id: 3, name: "Fire Service NOC", type:"Annual", date: formatDate(new Date()) },
+    { id: 4, name: "Bank Signature Change Confirmation", type:"Annual", date: formatDate(new Date()) },
+    { id: 5, name: "Minority Certificate", type:"Annual", date: formatDate(new Date()) },
+    { id: 6, name: "Building Stability Certificate - FORM D", type:"Annual", date: formatDate(new Date()) },
+    { id: 7, name: "Building Soundness Certificate", type:"Annual", date: formatDate(new Date()) },
+    { id: 8, name: "Fee Fixation Approval Order", date: formatDate(new Date()) },
+    { id: 9, name: "Sanitary Certificate", date: formatDate(new Date()) },
+    { id: 10, name: "Land Documents", date: formatDate(new Date()) },
+    { id: 11, name: "Patta & Chitta", date: formatDate(new Date()) },
+    { id: 12, name: "FMB", date: formatDate(new Date()) },
+    { id: 13, name: "Building Plan", date: formatDate(new Date()) },
+  ];
+
+
+  const columns = [
+    // {
+    //   name: 'No',
+    //   selector: row => row.id,
+    //   width: '150px',
+    // },
+    {
+      name: 'School Categories', // Updated label for School
+      selector: row => row.name,
+    },
+    {
+      name: 'Renewal Period',
+      selector: row => row.type,
+      cell: (row) => <div className='badge text-bg-info'>{row.type}</div>
+    },
+    {
+      name: ' Last Updated Date',
+      selector: row => row.date,
+    },
+    {
+      name: "Action",
+      cell: (row) => {
+        return (
+          <>
+            <div className="d-flex justify-content-between">
+              <div className="form_col ml-1">
+                <span className="custum-group-table">
+                  <button type="button" className="btn btn-sm text-info" onClick={() => { navigate('/nonfinancial/school/schoolList', { state: { name: row.name } }) }} title='List'>
+                    <i className="fa-solid fa-list"></i>
+                  </button>
+                </span>
+              </div>
+
+              <div className="form_col ml-1">
+                <span className="custum-group-table">
+                  <button type="button" className="btn btn-sm text-success" title='Add' onClick={() => { navigate("/nonfinancial/school/schoolAdd", { state: { name: row.name } }) }}>
+                    <i className="fa-solid fa-plus"></i>
+                  </button>
+                </span>
+              </div>
+              <div className="form_col ml-1">
+                <span className="custum-group-table">
+                  <button type="button" className="btn  btn-sm text-primary" title='Documents' onClick={() => { navigate("/nonfinancial/school/docsview", { state: { name: row.name } }) }}>
+                    <i className="fa-solid fa-list-check"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </>
+        );
+      },
+      ignoreRowClick: true,
+      allowoverflow: true,
+      maxwidth: '600px'
+    }
+  ];
+
+  return (
+    <>
+      <div >
+      <div className='p-2 bg-white'>
+          <div className='row m-2'>
+            <div className='col p-0'>
+              <div className='d-flex align-items-center gap-2'>
+                <button className='btn pb-0' type='button' onClick={() => navigate('/school')}>
+                  <i className='fa-solid fa-circle-left fs-5' />
+                </button>
+                <h6 className="fw-bold text-dark mb-0">{contextProp.navState?.name}</h6>
+                <div />
+              </div>
+            </div>
+            <div className='col p-0'>
+              <div className='d-flex justify-content-end'>
+                <div className="me-2 d-flex align-items-center">
+                  <button className='btn bnt-sm adminsearch-icon'>
+                    <i className="fa fa-search " aria-hidden="true"></i>
+                  </button>
+                  <input type="text" className="form-control adminsearch" placeholder="Search by category" title="Search by category" />
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='card' style={{ margin: "7px" }}>
+          <DataTable
+            columns={columns}
+            data={data}
+            customStyles={tableStyle}
+            pagination
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
+function School() {
+  return (
+    <Suspense>
+      <Routes>
+        {[{ path: '/', element: SchoolView }, ...schoolRoutes,...docsRoute].map((route, index) => (
+          route.element && <Route
+            key={index}
+            path={route.path}
+            element={<route.element />}
+          />
+        ))}
+      </Routes>
+    </Suspense>
+  )
+}
+
+export default School;

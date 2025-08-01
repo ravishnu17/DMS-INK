@@ -1,0 +1,308 @@
+{
+    "roles": [
+        {
+            "name": "Super Admin",
+            "is_default": true
+        },
+        {
+            "name": "Admin",
+            "is_default": true
+        },
+        {
+            "name": "DDM",
+            "is_default": true
+        },
+        {
+            "name": "Viewer",
+            "is_default": true
+        }
+    ],
+    "modules": [
+        "Community",
+        "Society",
+        "Parishes",
+        "Schools",
+        "Colleges",
+        "Technical Institutions",
+        "Boarding and Hostel",
+        "Departments",
+        "Social Sectors",
+        "Companies",
+        "Users",
+        "Roles",
+        "Access Rights",
+        "Confreres",
+        "Dioceses",
+        "Category Template",
+        "Portfolio category",
+        "Mapping Table",
+        "Web links",
+        "Email",
+        
+        "Notification",
+        "Reports"
+    ],
+    "features": [
+        "Add",
+        "View",
+        "Edit",
+        "Delete",
+        "View Files",
+        "Manage Files"
+    ],
+    "portfolio": [
+        {
+            "name": "Community",
+            "type": "Non Financial"
+        },
+        {
+            "name": "Society",
+            "type": "Non Financial"
+        },
+        {
+            "name": "Schools",
+            "type": "Non Financial"
+        },
+        {
+            "name": "Colleges",
+            "type": "Non Financial"
+        },
+        {
+            "name": "Technical Institutions",
+            "type": "Non Financial"
+        },
+        {
+            "name": "FCRA",
+            "type": "Financial"
+        },
+        {
+            "name": "EPF",
+            "type": "Financial"
+        },
+        {
+            "name": "ESI",
+            "type": "Financial"
+        },
+        {
+            "name": "GST",
+            "type": "Financial"
+        },
+        {
+            "name": "ITR",
+            "type": "Financial"
+        },
+        {
+            "name": "TDS",
+            "type": "Financial"
+        },
+        {
+            "name": "Professional Tax",
+            "type": "Financial"
+        }
+    ],
+    "financial_map": [
+        {
+            "non_financial_portfolio_id": 1,
+            "financial_portfolio_id": [ ]
+        }
+    ],
+    "data_types": [
+        "Text",
+        "Number",
+        "Date",
+        "Time",
+        "Single Choice",
+        "Multi Choice",
+        "Image",
+        "File Upload"
+    ],
+    "file_types": [
+        {
+            "data_type_id": 7,
+            "name": "jpg"
+        },
+        {
+            "data_type_id": 7,
+            "name": "jpeg"
+        },
+        {
+            "data_type_id": 7,
+            "name": "png"
+        },
+        {
+            "data_type_id": 8,
+            "name": "docx"
+        },
+        {
+            "data_type_id": 8,
+            "name": "Pdf"
+        },
+        {
+            "data_type_id": 8,
+            "name": "xlsx"
+        },
+        {
+            "data_type_id": 8,
+            "name": "csv"
+        },
+        {
+            "data_type_id": 8,
+            "name": "xls"
+        }
+    ],
+    "financial_years": [
+        {
+            "year": "2000-2001",
+            "start_date": "2000-04-01",
+            "end_date": "2001-03-31"
+        },
+        {
+            "year": "2001-2002",
+            "start_date": "2001-04-01",
+            "end_date": "2002-03-31"
+        },
+        {
+            "year": "2002-2003",
+            "start_date": "2002-04-01",
+            "end_date": "2003-03-31"
+        },
+        {
+            "year": "2003-2004",
+            "start_date": "2003-04-01",
+            "end_date": "2004-03-31"
+        },
+        {
+            "year": "2004-2005",
+            "start_date": "2004-04-01",
+            "end_date": "2005-03-31"
+        },
+        {
+            "year": "2005-2006",
+            "start_date": "2005-04-01",
+            "end_date": "2006-03-31"
+        },
+        {
+            "year": "2006-2007",
+            "start_date": "2006-04-01",
+            "end_date": "2007-03-31"
+        },
+        {
+            "year": "2007-2008",
+            "start_date": "2007-04-01",
+            "end_date": "2008-03-31"
+        },
+        {
+            "year": "2008-2009",
+            "start_date": "2008-04-01",
+            "end_date": "2009-03-31"
+        },
+        {
+            "year": "2009-2010",
+            "start_date": "2009-04-01",
+            "end_date": "2010-03-31"
+        },
+        {
+            "year": "2010-2011",
+            "start_date": "2010-04-01",
+            "end_date": "2011-03-31"
+        },
+        {
+            "year": "2011-2012",
+            "start_date": "2011-04-01",
+            "end_date": "2012-03-31"
+        },
+        {
+            "year": "2012-2013",
+            "start_date": "2012-04-01",
+            "end_date": "2013-03-31"
+        },
+        {
+            "year": "2013-2014",
+            "start_date": "2013-04-01",
+            "end_date": "2014-03-31"
+        },
+        {
+            "year": "2014-2015",
+            "start_date": "2014-04-01",
+            "end_date": "2015-03-31"
+        },
+        {
+            "year": "2015-2016",
+            "start_date": "2015-04-01",
+            "end_date": "2016-03-31"
+        },
+        {
+            "year": "2016-2017",
+            "start_date": "2016-04-01",
+            "end_date": "2017-03-31"
+        },
+        {
+            "year": "2017-2018",
+            "start_date": "2017-04-01",
+            "end_date": "2018-03-31"
+        },
+        {
+            "year": "2018-2019",
+            "start_date": "2018-04-01",
+            "end_date": "2019-03-31"
+        },
+        {
+            "year": "2019-2020",
+            "start_date": "2019-04-01",
+            "end_date": "2020-03-31"
+        },
+        {
+            "year": "2020-2021",
+            "start_date": "2020-04-01",
+            "end_date": "2021-03-31"
+        },
+        {
+            "year": "2021-2022",
+            "start_date": "2021-04-01",
+            "end_date": "2022-03-31"
+        },
+        {
+            "year": "2022-2023",
+            "start_date": "2022-04-01",
+            "end_date": "2023-03-31"
+        },
+        {
+            "year": "2023-2024",
+            "start_date": "2023-04-01",
+            "end_date": "2024-03-31"
+        },
+        {
+            "year": "2024-2025",
+            "start_date": "2024-04-01",
+            "end_date": "2025-03-31"
+        },
+        {
+            "year": "2025-2026",
+            "start_date": "2025-04-01",
+            "end_date": "2026-03-31"
+        }
+    ],
+    "province": {
+        "code": "PRO0001",
+        "name": "Salesian Province Bangalore (INK)",
+        "place": "Bangalore",
+        "address": "Karnataka",
+        "country_id": 99,
+        "state_id": 1609,
+        "region_id": 1,
+        "district_id": 1,
+        "country_ids": "99",
+        "state_ids": "1594,1595",
+        "region_ids": "5,6",
+        "district_ids": "23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67"
+    },
+    "user": {
+        "role_id": 2,
+        "province_id": 1,
+        "name": "Province Admin",
+        "email": "admin@gmail.com",
+        "mobile_no": 9876543210,
+        "mobile_country_code": 91,
+        "username": "province_admin"
+    }
+}

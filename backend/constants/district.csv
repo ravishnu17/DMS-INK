@@ -1,0 +1,72 @@
+id,name,region_id, region_name,state_id,sate_name
+1,Chennai,1,Chennai,1609,Tamil Nadu
+2,Chengalpattu,1,Chennai,1609,Tamil Nadu
+3,Kanchipuram,1,Chennai,1609,Tamil Nadu
+4,Tiruvallur,1,Chennai,1609,Tamil Nadu
+5,Tiruvannamalai,1,Chennai,1609,Tamil Nadu
+6,Tirupattur,2,Tirupattur,1609,Tamil Nadu
+7,Vaniyambadi,2,Tirupattur,1609,Tamil Nadu
+8,Tiruvannamalai,2,Tirupattur,1609,Tamil Nadu
+9,Krishnagiri,2,Tirupattur,1609,Tamil Nadu
+10,Dharmapuri,2,Tirupattur,1609,Tamil Nadu
+11,Vellore,3,Vellore,1609,Tamil Nadu
+12,Ranipet,3,Vellore,1609,Tamil Nadu
+13,Arcot,3,Vellore,1609,Tamil Nadu
+14,Ambur,3,Vellore,1609,Tamil Nadu
+15,Puducherry,4,Puducherry,1605,Puducherry
+16,Karaikal,4,Puducherry,1605,Puducherry
+17,Mahe,4,Puducherry,1605,Puducherry
+18,Yanam,4,Puducherry,1605,Puducherry
+20,Nicobar,1,Chennai,1578,Andaman and Nicobar Islands
+21,North and Middle Andaman,1,Chennai,1578,Andaman and Nicobar Islands
+22,South Andaman,1,Chennai,1578,Andaman and Nicobar Islands
+23,Bagalkot,5,Karnataka,1594,Karnataka
+24,Bellary,5,Karnataka,1594,Karnataka
+25,Bangalore Rural,5,Karnataka,1594,Karnataka
+26,Bangalore,5,Karnataka,1594,Karnataka
+27,Belgaum,5,Karnataka,1594,Karnataka
+28,Bidar,5,Karnataka,1594,Karnataka
+29,Chamarajnagar,5,Karnataka,1594,Karnataka
+30,Chikballapur,5,Karnataka,1594,Karnataka
+31,Chikkamagaluru,5,Karnataka,1594,Karnataka
+32,Chikkaballapur,5,Karnataka,1594,Karnataka
+33,Chitradurga,5,Karnataka,1594,Karnataka
+34,Dakshina Kannada,5,Karnataka,1594,Karnataka
+35,Davangare,5,Karnataka,1594,Karnataka
+36,Dharwad,5,Karnataka,1594,Karnataka
+37,Gadag,5,Karnataka,1594,Karnataka
+38,Hassan,5,Karnataka,1594,Karnataka
+39,Haveri,5,Karnataka,1594,Karnataka
+40,Gulbarga,5,Karnataka,1594,Karnataka
+41,Kodagu,5,Karnataka,1594,Karnataka
+42,Kolar,5,Karnataka,1594,Karnataka
+43,Koppal,5,Karnataka,1594,Karnataka
+44,Mandya,5,Karnataka,1594,Karnataka
+45,Mysore,5,Karnataka,1594,Karnataka
+46,Ramanagara,5,Karnataka,1594,Karnataka
+47,Raichur,5,Karnataka,1594,Karnataka
+48,Shimoga,5,Karnataka,1594,Karnataka
+49,Tumkur,5,Karnataka,1594,Karnataka
+50,Udupi,5,Karnataka,1594,Karnataka
+51,Uttara Kannada,5,Karnataka,1594,Karnataka
+52,Vijayapura,5,Karnataka,1594,Karnataka
+53,Yadagiri,5,Karnataka,1594,Karnataka
+54,Alappuzha,6,Kerala,1595,Kerala
+55,Ernakulam,6,Kerala,1595,Kerala
+56,Idukki,6,Kerala,1595,Kerala
+57,Kannur,6,Kerala,1595,Kerala
+58,Kasargod,6,Kerala,1595,Kerala
+59,Kollam,6,Kerala,1595,Kerala
+60,Kottayam,6,Kerala,1595,Kerala
+61,Kozhikode,6,Kerala,1595,Kerala
+62,Malappuram,6,Kerala,1595,Kerala
+63,Palakkad,6,Kerala,1595,Kerala
+64,Pathanamthitta,6,Kerala,1595,Kerala
+65,Thiruvananthapuram,6,Kerala,1595,Kerala
+66,Thrissur,6,Kerala,1595,Kerala
+67,Wayanadu,6,Kerala,1595,Kerala
+
+
+
+
+

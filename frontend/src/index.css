@@ -1,0 +1,27 @@
+:root {
+  --primary: #6854e9;
+  --secondary: #483c99;
+
+  --sidebar-primary: #ffffff;
+  --sidebar-selected: #8370fe;
+  --sidebar-hover: #e3dfff;
+  --footer-primary: var(--secondary);
+  --button-primary: var(--secondary);
+
+  --sidebar-width: 230px;
+  --sidebar-width-mobile: 180px;
+  --button-hover: #372d79;
+}
+
+body {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+  font-size: 14px !important;
+  background-color: #f0f4f7 !important;
+}
+
+input,
+textarea,
+option,
+select {
+  font-size: small !important;
+}

@@ -1,0 +1,243 @@
+.custom-dropzone{
+    width: 569px;
+    height: 264px;
+    padding: 2rem;
+    text-align: center;
+    border: dashed 1px #979797;
+    position: relative;
+    margin: 0 auto;
+
+     input{
+        opacity: 0;
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        top: 0;
+        left: 0;
+
+    }
+
+    label{
+
+        color: white;
+        width: 183px;
+        height: 44px;
+        border-radius: 21.5px;
+        background-color: #db202f;
+        padding: 8px 16px;
+    }
+    h5{
+        font-size: 20px;
+        font-weight: 600;
+        color: 38424c;
+    } 
+}
+
+.buttonImport{
+    background-color:mediumslateblue;
+    color:white;
+    border: 2px solid mediumslateblue;
+}
+
+.nav-pills .nav-item{
+    padding-right: 5px;
+}
+.colapse-title{
+    font-size: 1rem;
+    color: white;
+}
+.colapse-question-title{
+    font-size: 1rem;
+    font-weight: 600;
+}
+.accordion .card-header{
+    background-color: #269cc9;
+}
+
+.subtitle-step{
+    font-weight: 800;
+    border-bottom: 3px solid orange;
+}
+.condition-text .custom-select{
+    width: auto;
+}
+
+.condition-text{
+    font-weight: 500;
+}
+.btn-rounded{
+    border-radius: 50px;
+}
+
+.accordion>.card {
+    overflow: visible !important;
+
+
+    .card-header[aria-expanded="true"] .bi-chevron-down {
+        transform: rotate(180deg);
+    }
+
+    .card-header[aria-expanded="false"] .bi-chevron-down {
+        transform: rotate(0deg);
+    }
+}
+
+
+.search-icon{
+    position: absolute;
+    right: 17px;
+    top: 7px;
+}
+
+.btn-linked{
+    background-color: #f4f5f5;
+    font-weight: 500;
+    border: 1px solid lightgrey;
+}
+
+
+
+.search-icon{
+    position: absolute;
+    right: 17px;
+    top: 7px;
+}
+.btn-linked{
+    background-color: #f4f5f5;
+    font-weight: 500;
+    border: 1px solid lightgrey;
+}
+
+.Columns .dropdown-menu.show{
+    position: absolute;
+    will-change: transform;
+    top: 0px;
+    left: -42px !important;
+    transform: translate3d(-21px, 44px, 0px);
+    right: 26px;
+    width: fit-content !important;
+    z-index: 2000;
+}
+
+.coloums-search-icon{
+    position: absolute;
+    right: 28px;
+    top: 21px;
+}
+
+.dropdown-checkbox-item{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.radio_btns{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  
+}
+
+.settings-tab .card{
+height: 100%;
+}
+
+.menu_tabs{
+    .nav-link{
+        color: #ffffff;
+    }
+    .nav-pills .nav-link:not(.active):hover {
+        color: #ffffff;
+        background-color: #269cc9;
+    }
+}
+
+.question_type_header{
+    font-size: 21px !important;
+    margin: 0;
+    font-weight: bold;
+}
+
+.options_box{
+    height: 40px;
+    background-color: lightgray;
+    width: fit-content;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    cursor: pointer;
+    &:hover{
+        background-color: #979797;
+    }
+}
+
+.options_contain{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    justify-content: flex-end !important;
+    border-radius: 0.25rem;
+}
+.member-filter{
+    display: flex;
+    align-items: center;
+}
+.form_cursor {
+    cursor: pointer;
+}
+
+.form_col{
+    white-space: nowrap;
+}
+
+.card_hover:hover{
+    box-shadow: 4px 4px 6px #00000033 !important;
+    cursor: pointer;
+}
+
+.text-ellipse{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.text-ellipse_title{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+.fixed-hight{
+    height: 700px;
+    overflow-y: scroll;
+}
+
+
+.text-ellipse_form{
+    display: inline;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+.align-question{
+    align-items: baseline;
+}
+.btn-custum-primary{
+    color: #4a90e2;
+    background-color: #4a90e240;
+}

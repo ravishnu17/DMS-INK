@@ -1,0 +1,258 @@
+import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { tableStyle } from '../../constant/Util';
+import DataTable from 'react-data-table-component';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Swal from 'sweetalert2';
+import Dropzone from 'react-dropzone';
+
+function SocietyList() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const data = [
+    {
+      id: 1,
+      name: "Society 1",
+      accountant: "Anthony Selvam",
+      reportDate: "2024-05-15",
+    },
+    {
+      id: 2,
+      name: "Society 1",
+      accountant: "Anthony Selvam",
+      reportDate: "2024-04-15",
+    },
+    {
+      id: 3,
+      name: "Society 1",
+      accountant: "Anthony Selvam",
+      reportDate: "2024-03-15",
+    },
+
+  ]
+
+  const schema = yup.object().shape({
+    societyName: yup.string().required("Society Name is required"),
+    accountantName: yup.string().required("Accountant Name is required"),
+    updatedOn: yup.date().required("Updated On is required"),
+  });
+
+  const { register, handleSubmit, formState: { errors }, } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      societyName: "Society 1",
+      accountantName: "Anthony Selvam",
+      updatedOn: "",
+    },
+  });
+
+  const onSubmit = (data) => {
+    onSave(data);
+  };
+
+
+  const deleteRow = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    })
+  }
+  const columns = [
+    // {
+    //   name: 'No',
+    //   selector: row => row.id,
+    // },
+    {
+      name: 'Society',
+      selector: row => row.name,
+    },
+    {
+      name: 'Accountant',
+      selector: row => row.accountant,
+    },
+    {
+      name: 'Report Date',
+      selector: row => row.reportDate,
+    },
+
+    {
+      name: "Action",
+      cell: (row) => (
+        <>
+          <div className="d-flex justify-content-between">
+            <div className="form_col ml-1">
+              <span className="custum-group-table" >
+                <button type="button" className="btn  btn-sm text-info" title='View' data-bs-toggle="modal" data-bs-target="#detailsModal" >
+                  <i className="fas fa-eye " />
+                </button>
+              </span>
+            </div>
+            <div className="form_col ml-1">
+              <span className="custum-group-table" >
+                <button type="button" className="btn  btn-sm text-success" title='Update' data-bs-toggle="modal" data-bs-target="#editModal">
+                  <i className="fas fa-edit" />
+                </button>
+              </span>
+            </div>
+            <div className="form_col">
+              <span className="custum-group-table  ">
+                <button type="button" className="btn text-danger btn-sm" title='Delete' onClick={() => deleteRow()} >
+                  <i className="fa fa-trash" />
+                </button>
+              </span>
+            </div>
+          </div>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowoverflow: true,
+      maxwidth: '600px'
+    }
+  ];
+  return (
+    <>
+      <div >
+      <div className='p-2 bg-white'>
+        <div className="d-flex justify-content-between align-items-center m-2">
+          <div class="d-flex align-items-center gap-2">
+            <i className="fa-solid fa-circle-left fs-5" style={{ margin: "10px" }} onClick={() => navigate('/nonfinancial/society')}></i>
+            <h6 className="fw-bold mb-0">Society 1 - {location.state?.name}</h6>
+          </div>
+          <div className="me-2 d-flex align-items-center">
+          <button className='btn bnt-sm adminsearch-icon'>
+              <i className="fa fa-search " aria-hidden="true"></i>
+            </button>
+            <input type="text" className="form-control adminsearch" placeholder="Search by name" title="Search by name" />
+           
+          </div>
+        </div>
+        </div>
+        <div className='card' style={{ margin: "7px" }}>
+          <DataTable
+            columns={columns}
+            data={data}
+            customStyles={tableStyle}
+            pagination
+          />
+        </div>
+      </div>
+      <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">View Details</h5>
+              <button type="button" className="btn-sm btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label className="form-label">Society Name</label>
+                <p className="ms-2 fw-bold">Society 1</p>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Accountant Name</label>
+                <p className="ms-2 fw-bold">Anthony Selvam</p>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Updated On</label>
+                <p className="ms-2 fw-bold">2024-05-15</p>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">{location?.state?.name}</label>
+                <p className="ms-2 fw-bold">
+                  <button className="btn btn-sm d-flex align-items-center justify-content-between me-3 pt-2 gap-2">
+                    <span className='text-muted text-truncate border-bottom border-info'>
+                      <i className="fa-solid fa-file-csv fs-5 text-primary" /> &nbsp; reportFile.csv ({(24000 / 1024).toFixed(2)} KB)
+                    </span>
+                  </button>
+                </p>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Edit Details</h5>
+              <button type="button" className="btn-sm btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label">Society Name</label>
+                  <input type="text" className="form-control" {...register("societyName")} placeholder='Enter Society Name' />
+                  <p className="text-danger">{errors.societyName?.message}</p>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Accountant Name</label>
+                  <input type="text" className="form-control" {...register("accountantName")} placeholder='Enter Accountant Name' />
+                  <p className="text-danger">{errors.accountantName?.message}</p>
+                </div>
+
+                <div className=" mb-3">
+                  <label className="form-label">{location.state.name}</label>
+                  <Dropzone
+                    onDrop={() => { }}
+                    accept={{
+                      "application/pdf": [".pdf"],
+                      "application/vnd.ms-excel": [".xls"],
+                      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+                      "text/csv": [".csv"],
+                      "image/jpeg": [".jpg", ".jpeg"],
+                      "image/png": [".png"],
+                    }}
+                    maxFiles={1}
+                    maxSize={5 * 1024 * 1024} // 5MB
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <div
+                        {...getRootProps({ className: "dropzone-container" })}
+                      >
+                        <input {...getInputProps()} />
+                        <p className="text-muted">Drag & drop files here, or click to select files.</p>
+                        <small className="text-secondary">Allowed formats: PDF, Excel, CSV, JPEG, PNG | Max size: 5MB | Only one file </small>
+                      </div>
+                    )}
+                  </Dropzone>
+                  <li className="d-flex align-items-center justify-content-between me-3 pt-2 gap-2">
+                    <span className='text-muted text-truncate'>
+                      <i className={"fa-solid fa-file-csv fs-5 text-primary"} /> &nbsp; reportFile.csv ({(24000 / 1024).toFixed(2)} KB)
+                    </span>
+                    <i className="fa-solid fa-circle-xmark fs-5 text-danger" title='Delete file' onClick={() => { }} style={{ cursor: 'pointer' }} />
+                  </li>
+
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" className="btn  btn-sm btn-primary px-4 adminBtn">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default SocietyList
