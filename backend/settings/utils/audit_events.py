@@ -361,7 +361,7 @@ def register_audit_events(Base, db_session):
 
  
                         log = Log(
-                            province_id=None if getattr(user, "user_id", None) == getattr(secret, "s_admin_role", None) else getattr(user, "province_id", 0),
+                            province_id=None if getattr(user, "user_id", None) == getattr(secret, "s_admin_role", None) else getattr(user, "province_id", None),
                             module_name=model_cls.__name__,
                             record_id=record_id,
                             record_title=target.get_audit_title() if hasattr(target, "get_audit_title") else str(record_id),
