@@ -268,16 +268,19 @@ function PortfolioCategoryList() {
 
                   <>
                     <div className="form_col ml-1">
-                      <span className="custum-group-table" >
-                        <button type="button" className="btn  btn-sm text-success" title='Update' onClick={() => navigate('/config/portfolioCategory/mapcategory', { state: { data: row } })}>
-                          <i className="fas fa-edit" />
+                      {row?.type === "Non Financial" ? <span className="custum-group-table" >
+                        <button type="button" className="btn  btn-sm text-success" title='Map Financial portfolio' data-bs-toggle="modal" data-bs-target="#mappModal" onClick={() => setSelectedPortfolio(row)}>
+                          <i className="fas fa-link" />
                         </button>
                       </span>
+                        :
+                        <div className="form_col px-3" />
+                      }
                     </div>
                     <div className="form_col ml-1">
                       <span className="custum-group-table" >
-                        <button type="button" className="btn  btn-sm text-success" title='Map Financial portfolio' data-bs-toggle="modal" data-bs-target="#mappModal" onClick={() => setSelectedPortfolio(row)}>
-                          <i className="fas fa-link" />
+                        <button type="button" className="btn  btn-sm text-success" title='Update' onClick={() => navigate('/config/portfolioCategory/mapcategory', { state: { data: row } })}>
+                          <i className="fas fa-edit" />
                         </button>
                       </span>
                     </div>
@@ -487,16 +490,16 @@ function PortfolioCategoryList() {
 
             <div className="modal-body">
               <div className='row p-2'>
-              {
-                financialPortfolio?.map((item, index) =>
-                  <div className="col-6 form-check p-2 px-3" key={index}>
-                    <input className="form-check-input border border-2 border-secondary" type="checkbox" id={`checkboxTitle${index}`} checked={selectedMapp?.financial_name?.map(i => Number(i?.portfolio_id))?.includes(Number(item.id))} onChange={(e) => updatedSelectedMapp(e, item.id)} />
-                    <label className="form-check-label" htmlFor={`checkboxTitle${index}`} >
-                      {item?.name}
-                    </label>
-                  </div>
-                )
-              }
+                {
+                  financialPortfolio?.map((item, index) =>
+                    <div className="col-6 form-check p-2 px-3" key={index}>
+                      <input className="form-check-input border border-2 border-secondary" type="checkbox" id={`checkboxTitle${index}`} checked={selectedMapp?.financial_name?.map(i => Number(i?.portfolio_id))?.includes(Number(item.id))} onChange={(e) => updatedSelectedMapp(e, item.id)} />
+                      <label className="form-check-label" htmlFor={`checkboxTitle${index}`} >
+                        {item?.name}
+                      </label>
+                    </div>
+                  )
+                }
               </div>
             </div>
 

@@ -101,13 +101,26 @@ def add_financial_map(data: FinancialPortfolioMapSchema , db:Session= Depends(ge
 
     delete_ids= existing_financial_ids - new_financial_ids
     add_ids= new_financial_ids - existing_financial_ids
+    entity_financial_mapp= []
+    if data.non_financial_portfolio_id == secret.community_id:
+        for i in db.query(Community).options(load_only(Community.id)).all():
+            entity_financial_mapp.extend([CFP(community_id= i.id, portfolio_id= j) for j in add_ids])
+    elif data.non_financial_portfolio_id == secret.society_id:
+        for i in db.query(Society).options(load_only(Society.id)).all():
+            entity_financial_mapp.extend([CFP(society_id= i.id, portfolio_id= j) for j in add_ids])
+    else:
+        for i in db.query(LegalEntity).options(load_only(LegalEntity.id)).filter(LegalEntity.portfolio_id == data.non_financial_portfolio_id).all():
+            entity_financial_mapp.extend([LEFP(legal_entity_id= i.id, portfolio_id= j) for j in add_ids])
+    if entity_financial_mapp:
+        db.add_all(entity_financial_mapp)
+        
     new_entry= [FinancialPortfolioMap(non_financial_portfolio_id= data.non_financial_portfolio_id, financial_portfolio_id= i) for i in add_ids]
     if delete_ids:
         db.query(FinancialPortfolioMap).filter(FinancialPortfolioMap.non_financial_portfolio_id == data.non_financial_portfolio_id,FinancialPortfolioMap.financial_portfolio_id.in_(delete_ids)).delete(synchronize_session= False)
 
     if new_entry:
         db.add_all(new_entry)
-    print(new_entry, add_ids)
+        
     db.commit()
     return { "status": True,"details":"Financial Map added successfully" }
 
