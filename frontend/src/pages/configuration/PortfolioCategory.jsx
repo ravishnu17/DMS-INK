@@ -72,8 +72,8 @@ function PortfolioCategoryList() {
     }).finally(() => setLoading(false));
   }
 
-  const getMapping = () => {
-    getAPI(`/config/financial_map/${selectedPortfolio?.id}`).then((res) => {
+  const getMapping = (row) => {
+    getAPI(`/config/financial_map/${row?.id}`).then((res) => {
       if (res?.data?.status) {
         setSelectedMap(res?.data?.data);
       } else {
@@ -269,7 +269,12 @@ function PortfolioCategoryList() {
                   <>
                     <div className="form_col ml-1">
                       {row?.type === "Non Financial" ? <span className="custum-group-table" >
-                        <button type="button" className="btn  btn-sm text-success" title='Map Financial portfolio' data-bs-toggle="modal" data-bs-target="#mappModal" onClick={() => setSelectedPortfolio(row)}>
+                        <button type="button" className="btn  btn-sm text-success" title='Map Financial portfolio' data-bs-toggle="modal" data-bs-target="#mappModal" onClick={() => {
+                          setSelectedPortfolio(row);
+                          financialPortfolioList();
+                          getMapping(row);
+
+                        }}>
                           <i className="fas fa-link" />
                         </button>
                       </span>
@@ -347,13 +352,6 @@ function PortfolioCategoryList() {
   useEffect(() => {
     getPortfolioList();
   }, [search, skip, limit]);
-
-  useEffect(() => {
-    if (selectedPortfolio) {
-      financialPortfolioList();
-      getMapping();
-    }
-  }, [selectedPortfolio])
 
   useEffect(() => {
     portfolioType();
@@ -479,7 +477,7 @@ function PortfolioCategoryList() {
       }
 
       {/* mapping modal */}
-      <div className="modal fade" id="mappModal" tabIndex="-1" aria-labelledby="examplemappModal" aria-hidden="true" backdrop="static" keyboard="false">
+      <div className="modal fade" backdrop="static" keyboard="false" id="mappModal" tabIndex="-1" aria-labelledby="examplemappModal" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
 

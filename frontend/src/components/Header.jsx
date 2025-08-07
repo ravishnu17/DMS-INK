@@ -92,7 +92,7 @@ function Header({ openSideBar, menu }) {
             {logo(
               "white",
               currUser?.role_id === 1
-                ? "Data Management System"
+                ? "Document Management System"
                 : currUser?.province?.name || ""
             )}
           </div>

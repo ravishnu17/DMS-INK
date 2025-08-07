@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const logo = (color, title = "Information Management System") => <div className="navbar-brand text-center d-flex align-items-center justify-content-center" style={{ fontFamily: 'auto', fontSize: 'medium' }} >
+export const logo = (color, title = "Document Management System") => <div className="navbar-brand text-center d-flex align-items-center justify-content-center" style={{ fontFamily: 'auto', fontSize: 'medium' }} >
     {/* <img src={logoicon} alt="Logo" width="30" height="30" className="align-text-center me-1" /> */}
     <h6 className="fw-bold mb-0   ms-2 title" style={{ color: color }}>{title}</h6>
 </div>
