@@ -4,13 +4,12 @@ from sqlalchemy import func,or_,select
 from settings.db import get_db
 from settings.auth import authenticate
 from schemas.access_control import Token
-from models.answers import Answer
+from models.answers import Answer, AnswerData
 from models.access_control import Country, State, Region, District, User, Role
 from models.configuration import Portfolio, FinancialPortfolioMap , Community, CommunityUser, CFP, CFPUser, Society, SocietyUser, SFP, SFPUser, LegalEntity, LegalEntityUser, LEFP, LEFPUser,Diocese
 from schemas.configuration import (EntityPortfolioUpdateSchema,PortfolioSchema, ResponseModel, FinancialPortfolioMapSchema, CommunitySchema, CommunityResponse, SocietySchema, SocietyResponse, 
-    ViewCommunity,ViewSociety,ViewLegalEntity,ViewPortfolio,LEFPSchema,InchargeUserBase,CFPSchema,SFPSchema,DioceseSchema, LegalEntitySchema, LegalEntityResponse, DioceseOptionsSchema, CommunityOptionSchema, UpdateUsersSchema)
-from schemas.access_control import ViewCountry, ViewState, ViewRegion, ViewDistrict
-from schemas.audit import AuditSchema
+    DioceseSchema, LegalEntitySchema, LegalEntityResponse, DioceseOptionsSchema, CommunityOptionSchema, UpdateUsersSchema)
+from models.category import Category
 from constants.constant import limit_count, get_new_code, mapped_financial, authenticate_permission, get_province_locations, check_locations,validate_identifier,FORMAT_HINTS
 from settings.config import secret
 from datetime import datetime
@@ -102,15 +101,62 @@ def add_financial_map(data: FinancialPortfolioMapSchema , db:Session= Depends(ge
     delete_ids= existing_financial_ids - new_financial_ids
     add_ids= new_financial_ids - existing_financial_ids
     entity_financial_mapp= []
+    delete_entity_financial_mapp= []
+    mapping_has_data= False
+    
     if data.non_financial_portfolio_id == secret.community_id:
-        for i in db.query(Community).options(load_only(Community.id)).all():
-            entity_financial_mapp.extend([CFP(community_id= i.id, portfolio_id= j) for j in add_ids])
+        for community in db.query(Community).options(load_only(Community.id)).all():
+            entity_financial_mapp.extend([CFP(community_id= community.id, portfolio_id= j) for j in add_ids])
+
+            for financial_delete_id in delete_ids: # iterate delete id to get which portfolio is mapped and category name to find the data and show error
+                cfp_ids= [ cfp_id[0] for cfp_id in db.query(CFP.id).filter(CFP.community_id == community.id, CFP.portfolio_id == financial_delete_id).all()]
+                cfp_name= db.query(Portfolio).filter(Portfolio.id == financial_delete_id).first().name
+                # check if any mapping has data
+                mapping_has_data= db.query(Answer.id).filter(Answer.cfp_id.in_(cfp_ids), Answer.active == True).scalar_subquery()
+                mapping_has_data= db.query(AnswerData.id).filter(AnswerData.answer_id.in_(mapping_has_data), AnswerData.active == True).first()
+                # update delete id in delete_entity_financial_mapp
+                delete_entity_financial_mapp.extend(cfp_ids)
+                if mapping_has_data: # throw error if any mapping has data
+                    category_names= [category_name[0] for category_name in db.query(Category.name).filter(Category.id.in_(db.query(Answer.category_id).filter(Answer.cfp_id.in_(cfp_ids), Answer.active == True).scalar_subquery())).all()]
+                    return ResponseModel(status=False, details=f"Cannot delete: Community with {cfp_name} has data in Category - {', '.join(category_names)}")
     elif data.non_financial_portfolio_id == secret.society_id:
-        for i in db.query(Society).options(load_only(Society.id)).all():
-            entity_financial_mapp.extend([SFP(society_id= i.id, portfolio_id= j) for j in add_ids])
+        for society in db.query(Society).options(load_only(Society.id)).all():
+            entity_financial_mapp.extend([SFP(society_id= society.id, portfolio_id= j) for j in add_ids])
+
+            for financial_delete_id in delete_ids:
+                sfp_ids= [sfp_id[0] for sfp_id in db.query(SFP.id).filter(SFP.society_id == society.id, SFP.portfolio_id == financial_delete_id).all()]
+                sfp_name= db.query(Portfolio).filter(Portfolio.id == financial_delete_id).first().name
+
+                mapping_has_data= db.query(Answer.id).filter(Answer.sfp_id.in_(sfp_ids), Answer.active == True).scalar_subquery()
+                mapping_has_data= db.query(AnswerData.id).filter(AnswerData.answer_id.in_(mapping_has_data), AnswerData.active == True).first()
+
+                delete_entity_financial_mapp.extend(sfp_ids)
+                if mapping_has_data:
+                    category_names= [category_name[0] for category_name in db.query(Category.name).filter(Category.id.in_(db.query(Answer.category_id).filter(Answer.sfp_id.in_(sfp_ids), Answer.active == True).scalar_subquery())).all()]
+                    return ResponseModel(status=False, details=f"Cannot delete: Society with {sfp_name} has data in Category - {', '.join(category_names)}") 
     else:
-        for i in db.query(LegalEntity).options(load_only(LegalEntity.id)).filter(LegalEntity.portfolio_id == data.non_financial_portfolio_id).all():
-            entity_financial_mapp.extend([LEFP(legal_entity_id= i.id, portfolio_id= j) for j in add_ids])
+        for legal_entity in db.query(LegalEntity).options(load_only(LegalEntity.id)).filter(LegalEntity.portfolio_id == data.non_financial_portfolio_id).all():
+            entity_financial_mapp.extend([LEFP(legal_entity_id= legal_entity.id, portfolio_id= j) for j in add_ids])
+            entity_name= db.query(Portfolio).filter(Portfolio.id == data.non_financial_portfolio_id).first().name
+            for financial_delete_id in delete_ids:
+                lefp_ids= [lefp_id[0] for lefp_id in db.query(LEFP.id).filter( LEFP.legal_entity_id == legal_entity.id, LEFP.portfolio_id == financial_delete_id).all()]
+                lefp_name= db.query(Portfolio).filter(Portfolio.id == financial_delete_id).first().name
+                mapping_has_data= db.query(Answer.id).filter(Answer.lefp_id.in_(lefp_ids), Answer.active == True).scalar_subquery()
+                mapping_has_data= db.query(AnswerData.id).filter(AnswerData.answer_id.in_(mapping_has_data), AnswerData.active == True).first()
+                
+                delete_entity_financial_mapp.extend(lefp_ids)
+                if mapping_has_data:
+                    category_names= [category_name[0] for category_name in db.query(Category.name).filter(Category.id.in_(db.query(Answer.category_id).filter(Answer.lefp_id.in_(lefp_ids), Answer.active == True).scalar_subquery())).all()]
+                    return ResponseModel(status=False, details=f"Cannot delete: {entity_name} with {lefp_name} has data in Category - {', '.join(category_names)}") 
+
+    if delete_entity_financial_mapp:
+        if data.non_financial_portfolio_id == secret.community_id:
+            db.query(CFP).filter(CFP.id.in_(delete_entity_financial_mapp)).delete(synchronize_session= False)
+        elif data.non_financial_portfolio_id == secret.society_id:
+            db.query(SFP).filter(SFP.id.in_(delete_entity_financial_mapp)).delete(synchronize_session= False)
+        else:
+            db.query(LEFP).filter(LEFP.id.in_(delete_entity_financial_mapp)).delete(synchronize_session= False)
+
     if entity_financial_mapp:
         db.add_all(entity_financial_mapp)
 
@@ -122,7 +168,7 @@ def add_financial_map(data: FinancialPortfolioMapSchema , db:Session= Depends(ge
         db.add_all(new_entry)
         
     db.commit()
-    return { "status": True,"details":"Financial Map added successfully" }
+    return { "status": True,"details":"Financial Map updated successfully" }
 
 # Delete non financial and financial mapp menu
 @router.delete('/financial_map/{id}')
