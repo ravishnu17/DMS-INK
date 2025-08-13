@@ -200,7 +200,7 @@ class LegalEntity(BaseModel, AuditMixin):
     board = Column(String(100), nullable=True) # tech board
     affiliation = Column(String(100), nullable=True)
     faculty = Column(String(100), nullable=True)
-    ug_pg = Column(String(10), nullable=True)
+    ug_pg = Column(String(100), nullable=True)
     school_board = Column(String(100), nullable=True)
     medium_of_instruction = Column(String(100), nullable=True)
     grade = Column(String(100), nullable=True)

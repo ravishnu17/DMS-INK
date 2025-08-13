@@ -1192,6 +1192,9 @@ def import_societies(file: UploadFile = File(...), province_id: int = None, db: 
         
         
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
     
  
 
@@ -2423,13 +2426,16 @@ def import_schools(file: UploadFile = File(...), province_id: int = None, db: Se
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Schools").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Portfolio not found")
+    
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    school_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 4).all()
+    school_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     school_name_list = list(map(lambda x: x.name, school_name_list))
     
     # School Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Schools").scalar()
     school_fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -2468,6 +2474,12 @@ def import_schools(file: UploadFile = File(...), province_id: int = None, db: Se
         
         society_record = db.query(Society).filter(Society.name.ilike(row['Society'])).first()
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
         
         # if row.get('School Name', '') in list(map(lambda x: x['School Name'], new_schools)) or row.get('School Name', '') in school_name_list:
         #     return ResponseModel(status=False, details=f"School name '{row.get('School Name', '')}' already exists")
@@ -2532,7 +2544,7 @@ def import_schools(file: UploadFile = File(...), province_id: int = None, db: Se
         try:
             new_school = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(4,db,"Schools"),
+                code=get_new_entity_id(portfolio_id,db,"Schools"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 name=row.get('School Name', ''), 
@@ -2575,7 +2587,7 @@ def import_schools(file: UploadFile = File(...), province_id: int = None, db: Se
 
 
 
-#import for College 
+#import for College
 @router.post("/college/import")
 def import_college(file: UploadFile = File(...), province_id: int = None, db: Session = Depends(get_db), curr_user: Token = Depends(authenticate)):
     # Verify province
@@ -2610,13 +2622,16 @@ def import_college(file: UploadFile = File(...), province_id: int = None, db: Se
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Colleges").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Portfolio not found")
+    
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    college_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 5).all()
+    college_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     college_name_list = list(map(lambda x: x.name, college_name_list))
     
     # College Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Colleges").scalar()
     college_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -2659,6 +2674,11 @@ def import_college(file: UploadFile = File(...), province_id: int = None, db: Se
         society_record = db.query(Society).filter(Society.name.ilike(row['Society'])).first()
         
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
         
         # if row.get('College Name', '') in list(map(lambda x: x['College Name'], new_colleges)) or row.get('College Name', '') in college_name_list:
         #     return ResponseModel(status=False, details=f"College name '{row.get('College Name', '')}' already exists")
@@ -2680,8 +2700,8 @@ def import_college(file: UploadFile = File(...), province_id: int = None, db: Se
             return ResponseModel(status=False, details=f"District '{row['District']} - in row {index + 1}' not found in database")
         
         temp = {
-            "Society": society_record.name if society_record else None,
-            "Community": community_record.name if community_record else None,
+            "Society": society_record if society_record else None,
+            "Community": community_record if community_record else None,
             "College Name":" ".join(row.get('College Name', '').split()),
             "place": row.get('Place', ''),
             "address": row.get('Address', ''),
@@ -2695,7 +2715,6 @@ def import_college(file: UploadFile = File(...), province_id: int = None, db: Se
             "district_id": district_id[0].id,
             "lefp": []
         }
-        
         for i in college_Fp:
             number = str(row.get(f"{i['name']} Number", '')).strip()
             name = row.get(f"{i['name']} Name", '').strip()
@@ -2723,7 +2742,7 @@ def import_college(file: UploadFile = File(...), province_id: int = None, db: Se
         try:
             new_college = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(5,db,"Colleges"),
+                code=get_new_entity_id(portfolio_id,db,"Colleges"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 name=row.get('College Name', ''), 
@@ -2798,13 +2817,15 @@ def import_technical_institute(file: UploadFile = File(...), province_id: int = 
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Technical Institutions").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Portfolio not found")
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    Technical_Institute_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 6).all()
+    Technical_Institute_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     Technical_Institute_name_list = list(map(lambda x: x.name, Technical_Institute_name_list))
     
     # School Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Technical Institutions").scalar()
     Technical_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -2840,6 +2861,12 @@ def import_technical_institute(file: UploadFile = File(...), province_id: int = 
         
         society_record = db.query(Society).filter(Society.name.ilike(row['Society'])).first()
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
         
         # if row.get('Name', '') in list(map(lambda x: x['Name'], new_Technicals)) or row.get('College Name', '') in Technical_Institute_name_list:
         #     return ResponseModel(status=False, details=f"Technical name '{row.get('Name', '')}' already exists")
@@ -2903,7 +2930,7 @@ def import_technical_institute(file: UploadFile = File(...), province_id: int = 
         try:
             new_Technical = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(6,db,"Technical Institutions"),
+                code=get_new_entity_id(portfolio_id,db,"Technical Institutions"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 name=row.get('Name', ''), 
@@ -2979,13 +3006,17 @@ def import_Boarding_Hostel(file: UploadFile = File(...), province_id: int = None
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Boarding and Hostel").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Boarding and Hostel portfolio not found")
+    
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    Boarding_Hostel_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 7).all()
+    Boarding_Hostel_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     Boarding_Hostel_name_list = list(map(lambda x: x.name, Boarding_Hostel_name_list))
     
     # Boarding and Hostel Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Boarding and Hostel").scalar()
+
     Boarding_Hostel_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -3013,6 +3044,12 @@ def import_Boarding_Hostel(file: UploadFile = File(...), province_id: int = None
         
         society_record = db.query(Society).filter(Society.name.ilike(row['Society'])).first()
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
         
         # if row.get('Name', '') in list(map(lambda x: x['Name'], new_Boarding_Hostel)) or row.get('Name', '') in Boarding_Hostel_name_list:
         #     return ResponseModel(status=False, details=f"Boarding and Hostel name '{row.get('Name', '')}' already exists")
@@ -3074,7 +3111,7 @@ def import_Boarding_Hostel(file: UploadFile = File(...), province_id: int = None
         try:
             new_Boarding_Hostels = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(7,db,"Boarding and Hostel"),
+                code=get_new_entity_id(povince_id,db,"Boarding and Hostel"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 type=row.get('Type',''),
@@ -3147,13 +3184,17 @@ def import_departments(file: UploadFile = File(...), province_id: int = None, db
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Departments").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Departments Financial Portfolio not found")
+    
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    Departments_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 8).all()
+    Departments_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     Departments_name_list = list(map(lambda x: x.name, Departments_name_list))
     
     # Departments Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Departments").scalar()
+
     Departments_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -3177,6 +3218,12 @@ def import_departments(file: UploadFile = File(...), province_id: int = None, db
         
         society_record = db.query(Society).filter(Society.name.ilike(row['Society'])).first()
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
 
         
         # if row.get('Department Name', '') in list(map(lambda x: x['Name'], new_Departments)) or row.get('Department Name', '') in Departments_name_list:
@@ -3238,7 +3285,7 @@ def import_departments(file: UploadFile = File(...), province_id: int = None, db
         try:
             new_Department = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(8,db,"Departments"),
+                code=get_new_entity_id(portfolio_id,db,"Departments"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 name=row.get('Department Name', ''), 
@@ -3312,13 +3359,16 @@ def import_social_sectors(file: UploadFile = File(...), province_id: int = None,
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {', '.join(missing_columns)}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Social Sectors").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Social Sectors Portfolio not found")
+    
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    Social_Sectors_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 9).all()
+    Social_Sectors_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     Social_Sectors_name_list = list(map(lambda x: x.name, Social_Sectors_name_list))
     
     # School Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Social Sectors").scalar()
     Social_Sectors_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -3348,6 +3398,10 @@ def import_social_sectors(file: UploadFile = File(...), province_id: int = None,
         community_name = " ".join(row['Community'].strip().split()).lower()
         community_record = db.query(Community).filter(func.lower(Community.name) == community_name).first()
 
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
 
         
         # if row.get('Social Sectors Name', '') in list(map(lambda x: x['Name'], new_Social_Sectors)) or row.get('Social Sectors Name', '') in Social_Sectors_name_list:
@@ -3410,7 +3464,7 @@ def import_social_sectors(file: UploadFile = File(...), province_id: int = None,
         try:
             new_Social_Sector = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(9,db,"Social Sectors"),
+                code=get_new_entity_id(portfolio_id,db,"Social Sectors"),
                 community_id=community_record.id if community_record else None,
                 society_id=society_record.id if society_record else None,
                 name=row.get('Social Sectors Name', ''), 
@@ -3480,14 +3534,16 @@ def import_companies(file: UploadFile = File(...), province_id: int = None, db: 
     missing_columns = required_columns - set(df.columns)
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
-    
+
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Companies").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Portfolio not found")
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    Companies_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 10).all()
+    Companies_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     Companies_name_list = list(map(lambda x: x.name, Companies_name_list))
     
-    # Companies Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Companies").scalar()
+    # Companies Financial Portfolio   
     Companies_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -3507,6 +3563,9 @@ def import_companies(file: UploadFile = File(...), province_id: int = None, db: 
             return ResponseModel(status=False,details=f"Address is empty in row{index + 1}")
         
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
+
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
         
         # if row.get('Company Name', '') in list(map(lambda x: x['Name'], new_Companies)) or row.get('Company Name', '') in Companies_name_list:
         #     return ResponseModel(status=False, details=f"Company Name '{row.get('Company Name', '')}' already exists")
@@ -3566,7 +3625,7 @@ def import_companies(file: UploadFile = File(...), province_id: int = None, db: 
         try:
             new_Companie = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(10,db,"Companies"),
+                code=get_new_entity_id(portfolio_id,db,"Companies"),
                 community_id=community_record.id if community_record else None,
                 name=row.get('Company Name', ''), 
                 place=row['place'], 
@@ -3634,13 +3693,15 @@ def import_parishes(file: UploadFile = File(...), province_id: int = None, db: S
     if missing_columns:
         return ResponseModel(status=False, details=f"Missing required columns: {missing_columns}")
     
+    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Parishes").scalar()
+    if not portfolio_id:
+        return ResponseModel(status=False, details="Parishes Portfolio not found")
     # Get Province Locations
     locations = get_province_locations(province_id, db)
-    Parishes_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == 3).all()
+    Parishes_name_list = db.query(LegalEntity).filter(LegalEntity.province_id == province_id, LegalEntity.portfolio_id == portfolio_id).all()
     Parishes_name_list = list(map(lambda x: x.name, Parishes_name_list))
     
     # Parishes Financial Portfolio
-    portfolio_id = db.query(Portfolio.id).filter(Portfolio.name == "Parishes").scalar()
     Parishes_Fp = list(map(lambda x: {"portfolio_id": x['portfolio_id'], "name": x['name']}, mapped_financial(db, portfolio_id)[0]['financial_name']))
 
     
@@ -3672,6 +3733,14 @@ def import_parishes(file: UploadFile = File(...), province_id: int = None, db: S
         society_record = db.query(Society).filter(Society.name.ilike(row['Society'])).first()
         community_record = db.query(Community).filter(Community.name.ilike(row['Community'])).first()
         Diocese_record = db.query(Diocese).filter(Diocese.name.ilike(row['Diocese'])).first()
+
+
+        if not society_record:
+            return ResponseModel(status=False, details=f"Society '{row['Society']} - in row {index + 1}' not found in database")
+        if not community_record:
+            return ResponseModel(status=False, details=f"Community '{row['Community']} - in row {index + 1}' not found in database")
+        if not Diocese_record:
+            return ResponseModel(status=False, details=f"Diocese '{row['Diocese']} - in row {index + 1}' not found in database")
         
         # if row.get('Name', '') in list(map(lambda x: x['Name'], new_Parishes)) or row.get('Name', '') in Parishes_name_list:
         #     return ResponseModel(status=False, details=f"Parishes name '{row.get('Name', '')}' already exists")
@@ -3734,7 +3803,7 @@ def import_parishes(file: UploadFile = File(...), province_id: int = None, db: S
         try:
             new_Parishe = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(3,db,"Parishes"),
+                code=get_new_entity_id(portfolio_id,db,"Parishes"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 diocese_id=Diocese_record.id if Diocese_record else None,
