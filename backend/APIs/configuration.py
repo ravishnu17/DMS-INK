@@ -3111,7 +3111,7 @@ def import_Boarding_Hostel(file: UploadFile = File(...), province_id: int = None
         try:
             new_Boarding_Hostels = LegalEntity(
                 province_id=province_id, 
-                code=get_new_entity_id(povince_id,db,"Boarding and Hostel"),
+                code=get_new_entity_id(portfolio_id,db,"Boarding and Hostel"),
                 society_id=society_record.id if society_record else None,
                 community_id=community_record.id if community_record else None,
                 type=row.get('Type',''),
