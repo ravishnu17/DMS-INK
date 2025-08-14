@@ -291,6 +291,10 @@ function College() {
 
   const [editViewerData, setEditViewerData] = useState({});
 
+    const collegePortfolioId = useMemo(() => {
+      return contextProp?.portfolios?.filter((portfolio) => portfolio?.name?.toLowerCase() === "colleges")?.[0]?.id;
+    }, [contextProp?.portfolios]);
+
   const handleSaveIncharge = () => {
     if (!editInchargeData.newIncharge) return;
 
@@ -1725,7 +1729,7 @@ function College() {
   };
 
   const downloadExcel = () => {
-    fetch(API_BASE_URL + "config/entities/sample-export?portfolio_id=5", {
+    fetch(API_BASE_URL + "config/entities/sample-export?portfolio_id="+ String(collegePortfolioId), {
       method: "GET",
       headers: {
         "Content-Type":
@@ -1747,7 +1751,7 @@ function College() {
   };
 
   const downloadCommunityExcel = () => {
-    fetch(API_BASE_URL + "config/entity-portfolio/export?portfolio_id=5", {
+    fetch(API_BASE_URL + "config/entity-portfolio/export?portfolio_id="+ String(collegePortfolioId), {
       method: "GET",
       headers: {
         "Content-Type":

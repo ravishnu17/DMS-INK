@@ -66,6 +66,10 @@ function School() {
 
   const [editViewerData, setEditViewerData] = useState({});
 
+  const schoolPortfolioId= useMemo(() => {
+    return contextProp?.portfolios?.filter((portfolio) => portfolio?.name?.toLowerCase() === "schools")?.[0]?.id;
+  }, [contextProp?.portfolios]);
+  
   const handleSaveIncharge = () => {
     if (!editInchargeData.newIncharge) return;
 
@@ -1756,7 +1760,7 @@ function School() {
   };
 
   const downloadExcel = () => {
-    fetch(API_BASE_URL + "config/entities/sample-export?portfolio_id=4", {
+    fetch(`${API_BASE_URL}config/entities/sample-export?portfolio_id=${schoolPortfolioId}`, {
       method: "GET",
       headers: {
         "Content-Type":
@@ -1778,7 +1782,7 @@ function School() {
   };
 
   const downloadCommunityExcel = () => {
-    fetch(API_BASE_URL + "config/entity-portfolio/export?portfolio_id=4", {
+    fetch(API_BASE_URL + "config/entity-portfolio/export?portfolio_id="+ String(schoolPortfolioId), {
       method: "GET",
       headers: {
         "Content-Type":

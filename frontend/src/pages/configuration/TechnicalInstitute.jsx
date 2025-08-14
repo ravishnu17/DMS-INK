@@ -47,7 +47,7 @@ function TechnicalInstitute() {
     if (contextProp?.permissions) {
       setmodulepermission(
         contextProp?.permissions?.role_permissions?.[
-          `technical institutions`
+        `technical institutions`
         ] || {}
       );
     }
@@ -62,6 +62,10 @@ function TechnicalInstitute() {
 
   const [editViewerData, setEditViewerData] = useState({});
 
+  const techPortfolioId= useMemo(() => {
+    return contextProp?.portfolios?.filter((portfolio) => portfolio?.name?.toLowerCase() === "technical institutions")?.[0]?.id;
+  }, [contextProp?.portfolios]);
+
   const handleSaveIncharge = () => {
     if (!editInchargeData.newIncharge) return;
 
@@ -71,20 +75,20 @@ function TechnicalInstitute() {
       role_id: RoleIds.DDMRoleId, // optional - financial for main data
       users: editInchargeData.newIncharge.value // new incharge user id
         ? [
-            {
-              user_id: editInchargeData.newIncharge.value,
-              role_id: editInchargeData.newIncharge.roleId || RoleIds.DDMRoleId, // default to DDM role if not specified
-            },
-          ]
+          {
+            user_id: editInchargeData.newIncharge.value,
+            role_id: editInchargeData.newIncharge.roleId || RoleIds.DDMRoleId, // default to DDM role if not specified
+          },
+        ]
         : editInchargeData?.oldIncharge
-        ? [
+          ? [
             {
               user_id: editInchargeData?.oldIncharge.user_id,
               role_id:
                 editInchargeData?.oldIncharge?.role_id || RoleIds.DDMRoleId, // default to DDM role if not specified
             },
           ]
-        : [],
+          : [],
     };
 
     addUpdateAPI(
@@ -140,21 +144,21 @@ function TechnicalInstitute() {
       role_id: RoleIds.ViewerRoleId, // optional - financial for main data
       users: editViewerData.newViewer.value // new incharge user id
         ? [
-            {
-              user_id: editViewerData?.newViewer?.value,
-              role_id:
-                editViewerData?.newViewer?.roleId || RoleIds?.ViewerRoleId, // default to DDM role if not specified
-            },
-          ]
+          {
+            user_id: editViewerData?.newViewer?.value,
+            role_id:
+              editViewerData?.newViewer?.roleId || RoleIds?.ViewerRoleId, // default to DDM role if not specified
+          },
+        ]
         : editViewerData?.oldViewer
-        ? [
+          ? [
             {
               user_id: editViewerData?.oldViewer.user_id,
               role_id:
                 editViewerData?.oldViewer?.role_id || RoleIds?.ViewerRoleId, // default to DDM role if not specified
             },
           ]
-        : [],
+          : [],
     };
 
     addUpdateAPI(
@@ -581,13 +585,13 @@ function TechnicalInstitute() {
       if (portfolioIds != undefined && search != undefined) {
         getAPI(
           "/config/entity?skip=" +
-            pagination?.skip +
-            "&limit=" +
-            pagination?.limit +
-            "&portfolio_id=" +
-            portfolioIds +
-            "&search=" +
-            search
+          pagination?.skip +
+          "&limit=" +
+          pagination?.limit +
+          "&portfolio_id=" +
+          portfolioIds +
+          "&search=" +
+          search
         )
           .then((res) => {
             if (res?.data.status) {
@@ -605,11 +609,11 @@ function TechnicalInstitute() {
       } else if (portfolioIds != undefined) {
         getAPI(
           "/config/entity?skip=" +
-            pagination?.skip +
-            "&limit=" +
-            pagination?.limit +
-            "&portfolio_id=" +
-            portfolioIds
+          pagination?.skip +
+          "&limit=" +
+          pagination?.limit +
+          "&portfolio_id=" +
+          portfolioIds
         )
           .then((res) => {
             if (res?.data.status) {
@@ -813,10 +817,10 @@ function TechnicalInstitute() {
 
             const defaultIncharge = ddmUsers
               ? {
-                  value: ddmUsers?.user_id,
-                  label: ddmUsers.user.name,
-                  roleId: ddmUsers?.role_id,
-                }
+                value: ddmUsers?.user_id,
+                label: ddmUsers.user.name,
+                roleId: ddmUsers?.role_id,
+              }
               : null;
             setValue("incharge_user_id", defaultIncharge);
             // const defaultViewers = viewerUsers ? { value: viewerUsers?.user_id, label: viewerUsers.user.name, roleId: viewerUsers?.role_id } : null;
@@ -831,10 +835,10 @@ function TechnicalInstitute() {
             const defaultViewers =
               viewerUsers?.length > 0
                 ? viewerUsers?.map((user) => ({
-                    value: user?.user_id,
-                    label: user.user.name,
-                    roleId: user.role_id,
-                  }))
+                  value: user?.user_id,
+                  label: user.user.name,
+                  roleId: user.role_id,
+                }))
                 : [];
             // setValue("viewr_user_id", defaultViewers);
 
@@ -892,18 +896,18 @@ function TechnicalInstitute() {
 
               const defaultIncharge = ddmUsers
                 ? {
-                    value: ddmUsers?.user_id,
-                    label: ddmUsers.user.name,
-                    roleId: ddmUsers?.role_id,
-                  }
+                  value: ddmUsers?.user_id,
+                  label: ddmUsers.user.name,
+                  roleId: ddmUsers?.role_id,
+                }
                 : null;
 
               const defaultViewers = viewers
                 ? {
-                    value: viewers?.user_id,
-                    label: viewers.user.name,
-                    roleId: viewers?.role_id,
-                  }
+                  value: viewers?.user_id,
+                  label: viewers.user.name,
+                  roleId: viewers?.role_id,
+                }
                 : null;
 
               setValue(
@@ -1137,10 +1141,10 @@ function TechnicalInstitute() {
                     },
                     oldViewer: oldViewer
                       ? {
-                          value: oldViewer.user_id,
-                          label: oldViewer.user.name,
-                          roleId: oldViewer.role_id,
-                        }
+                        value: oldViewer.user_id,
+                        label: oldViewer.user.name,
+                        roleId: oldViewer.role_id,
+                      }
                       : null,
                     newViewer: null,
                   });
@@ -1169,7 +1173,7 @@ function TechnicalInstitute() {
           <>
             <div className="d-flex justify-content-between">
               {currentUser?.role?.name === "Admin" ||
-              currentUser?.role?.name === "Super Admin" ? (
+                currentUser?.role?.name === "Super Admin" ? (
                 <>
                   {/* <div className="form_col ml-1">
                       <span className="custum-group-table" >
@@ -1420,10 +1424,10 @@ function TechnicalInstitute() {
                       {!portfolio?.lefp_user?.some(
                         (item) => item?.role?.name === "DDM"
                       ) && (
-                        <span className="badge text-bg-secondary">
-                          No Incharge
-                        </span>
-                      )}
+                          <span className="badge text-bg-secondary">
+                            No Incharge
+                          </span>
+                        )}
                     </td>
                     <td className="p-1">
                       {portfolio?.lefp_user?.some(
@@ -1444,7 +1448,7 @@ function TechnicalInstitute() {
                     </td>
 
                     {currentUser?.role?.name === "Admin" ||
-                    currentUser?.role?.name === "Super Admin" ? (
+                      currentUser?.role?.name === "Super Admin" ? (
                       <td className="p-1 text-center">
                         <button
                           type="button"
@@ -1469,8 +1473,8 @@ function TechnicalInstitute() {
                     ) : (
                       <>
                         {hasAccess &&
-                        (modulepermission?.[`manage files`] ||
-                          modulepermission?.[`view files`]) ? (
+                          (modulepermission?.[`manage files`] ||
+                            modulepermission?.[`view files`]) ? (
                           <td className="p-1 text-center">
                             <button
                               type="button"
@@ -1574,20 +1578,20 @@ function TechnicalInstitute() {
           lefp_user: [
             ...(value.incharge_user_id
               ? [
-                  {
-                    user_id: value.incharge_user_id.value,
-                    role_id: value.incharge_user_id.roleId,
-                  },
-                ]
+                {
+                  user_id: value.incharge_user_id.value,
+                  role_id: value.incharge_user_id.roleId,
+                },
+              ]
               : []),
             ...(value.viewer_user_id
               ? (Array.isArray(value.viewer_user_id)
-                  ? value.viewer_user_id
-                  : [value.viewer_user_id]
-                ).map((user) => ({
-                  user_id: user.value,
-                  role_id: user.roleId,
-                }))
+                ? value.viewer_user_id
+                : [value.viewer_user_id]
+              ).map((user) => ({
+                user_id: user.value,
+                role_id: user.roleId,
+              }))
               : []),
           ],
         };
@@ -1767,7 +1771,7 @@ function TechnicalInstitute() {
   };
 
   const downloadExcel = () => {
-    fetch(API_BASE_URL + "config/entities/sample-export?portfolio_id=6", {
+    fetch(API_BASE_URL + "config/entities/sample-export?portfolio_id=" + String(techPortfolioId), {
       method: "GET",
       headers: {
         "Content-Type":
@@ -1789,7 +1793,7 @@ function TechnicalInstitute() {
   };
 
   const downloadCommunityExcel = () => {
-    fetch(API_BASE_URL + "config/entity-portfolio/export?portfolio_id=6", {
+    fetch(API_BASE_URL + "config/entity-portfolio/export?portfolio_id=" + String(techPortfolioId), {
       method: "GET",
       headers: {
         "Content-Type":
@@ -1942,7 +1946,7 @@ function TechnicalInstitute() {
             }} >Import </button>
             <button className='btn btn-sm px-4  btn-primary' title='Export' onClick={downloadCommunityExcel} >Export </button> */}
             {currentUser?.role?.name === "Admin" ||
-            currentUser?.role?.name === "Super Admin" ? (
+              currentUser?.role?.name === "Super Admin" ? (
               <>
                 <button
                   className="btn btn-sm  adminBtn"
@@ -2148,9 +2152,8 @@ function TechnicalInstitute() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control  ${
-                        errors.name ? "is-invalid" : ""
-                      }`}
+                      className={`form-control  ${errors.name ? "is-invalid" : ""
+                        }`}
                       placeholder="Enter name"
                       {...register("name", { required: "Name is required" })}
                     />
@@ -2163,9 +2166,8 @@ function TechnicalInstitute() {
 
                     <select
                       {...register("financialAssistant")}
-                      className={`form-control form-select ${
-                        errors.financialAssistant ? "is-invalid" : ""
-                      }`}
+                      className={`form-control form-select ${errors.financialAssistant ? "is-invalid" : ""
+                        }`}
                     >
                       <option value="">Select Accountant</option>
                       <option value="Self Financing">Self Financing</option>
@@ -2183,9 +2185,8 @@ function TechnicalInstitute() {
                     </label>
                     <select
                       {...register("board")}
-                      className={`form-control form-select ${
-                        errors.board ? "is-invalid" : ""
-                      }`}
+                      className={`form-control form-select ${errors.board ? "is-invalid" : ""
+                        }`}
                     >
                       <option value="">Select Board</option>
                       <option value="AICTE">AICTE</option>
@@ -2202,9 +2203,8 @@ function TechnicalInstitute() {
                     </label>
                     <select
                       {...register("type")}
-                      className={`form-control form-select ${
-                        errors.type ? "is-invalid" : ""
-                      }`}
+                      className={`form-control form-select ${errors.type ? "is-invalid" : ""
+                        }`}
                     >
                       <option value="">Select Type</option>
                       <option value="Polytechnic College">
@@ -2221,9 +2221,8 @@ function TechnicalInstitute() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control  ${
-                        errors.place ? "is-invalid" : ""
-                      }`}
+                      className={`form-control  ${errors.place ? "is-invalid" : ""
+                        }`}
                       placeholder="Enter place"
                       {...register("place", {
                         required: "Place is required",
@@ -2487,14 +2486,14 @@ function TechnicalInstitute() {
                         {errors[`portfolio_${item.portfolio_id}`]?.[
                           item.type
                         ] && (
-                          <p className="text-danger">
-                            {
-                              errors[`portfolio_${item.portfolio_id}`][
-                                item.type
-                              ]?.message
-                            }
-                          </p>
-                        )}
+                            <p className="text-danger">
+                              {
+                                errors[`portfolio_${item.portfolio_id}`][
+                                  item.type
+                                ]?.message
+                              }
+                            </p>
+                          )}
                       </div>
 
                       {/* Show these fields only if type is "Registered" */}
@@ -2519,14 +2518,14 @@ function TechnicalInstitute() {
                             {errors[`portfolio_${item.portfolio_id}`]?.[
                               item.key
                             ] && (
-                              <p className="text-danger">
-                                {
-                                  errors[`portfolio_${item.portfolio_id}`][
-                                    item.key
-                                  ]?.message
-                                }
-                              </p>
-                            )}
+                                <p className="text-danger">
+                                  {
+                                    errors[`portfolio_${item.portfolio_id}`][
+                                      item.key
+                                    ]?.message
+                                  }
+                                </p>
+                              )}
                           </div>
                           <div className="col-md-4 mb-1">
                             <label className="form-label">
@@ -2547,14 +2546,14 @@ function TechnicalInstitute() {
                             {errors[`portfolio_${item.portfolio_id}`]?.[
                               item.key1
                             ] && (
-                              <p className="text-danger">
-                                {
-                                  errors[`portfolio_${item.portfolio_id}`][
-                                    item.key1
-                                  ]?.message
-                                }
-                              </p>
-                            )}
+                                <p className="text-danger">
+                                  {
+                                    errors[`portfolio_${item.portfolio_id}`][
+                                      item.key1
+                                    ]?.message
+                                  }
+                                </p>
+                              )}
                           </div>
                           <div className="col-md-4 mb-1">
                             <label className="form-label">
@@ -2597,13 +2596,13 @@ function TechnicalInstitute() {
                             />
                             {errors[`portfolio_${item.portfolio_id}`]
                               ?.incharge_user_id && (
-                              <p className="text-danger">
-                                {
-                                  errors[`portfolio_${item.portfolio_id}`]
-                                    .incharge_user_id?.message
-                                }
-                              </p>
-                            )}
+                                <p className="text-danger">
+                                  {
+                                    errors[`portfolio_${item.portfolio_id}`]
+                                      .incharge_user_id?.message
+                                  }
+                                </p>
+                              )}
                           </div>
                           <div className="col-md-4 mb-1">
                             <label className="form-label">
@@ -2655,13 +2654,13 @@ function TechnicalInstitute() {
                             />
                             {errors[`portfolio_${item.portfolio_id}`]
                               ?.viewer_user_id && (
-                              <p className="text-danger">
-                                {
-                                  errors[`portfolio_${item.portfolio_id}`]
-                                    .viewer_user_id?.message
-                                }
-                              </p>
-                            )}
+                                <p className="text-danger">
+                                  {
+                                    errors[`portfolio_${item.portfolio_id}`]
+                                      .viewer_user_id?.message
+                                  }
+                                </p>
+                              )}
                           </div>
                         </>
                       )}

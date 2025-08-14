@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()],
   base: '/ink-dms',
+  base: '/ink-live/',
   
     test: {
       globals: true,
